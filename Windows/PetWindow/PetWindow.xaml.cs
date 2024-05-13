@@ -86,6 +86,18 @@ namespace VDC_WPF_T
             HealthState npw = new HealthState(_pet);
             npw.ShowDialog();
         }
+
+        private void Button_Click_Current_Health_State(object sender, RoutedEventArgs e)
+        {
+            Diagnostic dia = new Diagnostic(_pet);
+            dia.Loaded += async (sender, e) =>
+            {
+                await dia.RefreshTest();
+            };
+            dia.ShowDialog();
+            //Task.Run(async () => await dia.RefreshTest());
+        }
+
         private void Button_Click_3(object sender, RoutedEventArgs e)
         {
             TreatmentPlan npw = new TreatmentPlan(_pet);

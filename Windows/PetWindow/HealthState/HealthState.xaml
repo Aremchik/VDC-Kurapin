@@ -77,7 +77,7 @@
                 </Popup>
             </StackPanel>
 
-            <Button Grid.Column="1" Height="32" Width="150" Content="Редакторовать" Background="LightSeaGreen" FontSize="15" FontFamily="./Resources/montserrat-regular.ttf" BorderBrush="LightSeaGreen" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Margin="0,0,10,0" Click="Button_Click_2" d:IsLocked="True" >
+            <Button Grid.Column="1" Height="32" Width="150" Content="Редактировать" Background="LightSeaGreen" FontSize="15" FontFamily="./Resources/montserrat-regular.ttf" BorderBrush="LightSeaGreen" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Margin="0,0,10,0" Click="Button_Click_2" d:IsLocked="True" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="10"/>
@@ -125,7 +125,7 @@
                
                     </StackPanel>
 
-                    <Button Grid.Column="1" Height="38" Width="160" Content="Редакторовать" Background="LightSeaGreen" FontSize="15" FontFamily="./Resources/montserrat-regular.ttf" BorderBrush="LightSeaGreen" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Margin="0,60,10,0" Click="Button_Click_2" d:IsLocked="True" >
+                    <Button Grid.Column="1" Height="38" Width="160" Content="Редактировать" Background="LightSeaGreen" FontSize="15" FontFamily="./Resources/montserrat-regular.ttf" BorderBrush="LightSeaGreen" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Margin="0,60,10,0" Click="Button_Click_2" d:IsLocked="True" >
                         <Button.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="10"/>

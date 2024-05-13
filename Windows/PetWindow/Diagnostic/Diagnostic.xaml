@@ -3,9 +3,10 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-        xmlns:local="clr-namespace:VDC_WPF_T"
+        xmlns:local="clr-namespace:VDC_WPF_T"       
+        xmlns:lvc="clr-namespace:LiveCharts.Wpf;assembly=LiveCharts.Wpf"
         mc:Ignorable="d"
-        Title="Diagnostic" Height="1024" Width="1440" WindowStartupLocation="CenterScreen" MinWidth="1024" MinHeight="600">
+        Title="Diagnostic" Height="1024" Width="1440" WindowStartupLocation="CenterScreen" MinWidth="1024" MinHeight="600" Name="diagnostic">
 
 
     <Window.Resources>
@@ -260,13 +261,22 @@
                 </Popup>
             </StackPanel>
 
-            <Button Grid.Column="1" Height="32" Width="150" Content="Редакторовать" Background="LightSeaGreen" FontSize="15" FontFamily="./Resources/montserrat-regular.ttf" BorderBrush="LightSeaGreen" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Margin="0,0,10,0" Click="Button_Click_2" d:IsLocked="True" >
+            <Button Grid.Column="1" Height="32" Width="150" Content="Редактировать" Background="LightSeaGreen" FontSize="15" FontFamily="./Resources/montserrat-regular.ttf" BorderBrush="LightSeaGreen" HorizontalAlignment="Right" VerticalAlignment="Center" Foreground="White" Margin="0,0,10,0" Click="Button_Click_2" d:IsLocked="True" >
                 <Button.Resources>
                     <Style TargetType="{x:Type Border}">
                         <Setter Property="CornerRadius" Value="10"/>
                     </Style>
                 </Button.Resources>
             </Button>
+            <!--
+            <Button Grid.Column="1" Height="32" Width="150" Content="Обновить" Background="LightSeaGreen" FontSize="15" FontFamily="./Resources/montserrat-regular.ttf" BorderBrush="LightSeaGreen" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White" Margin="0,30,10,10" Click="Button_Click_Refresh" d:IsLocked="True" >
+                <Button.Resources>
+                    <Style TargetType="{x:Type Border}">
+                        <Setter Property="CornerRadius" Value="10"/>
+                    </Style>
+                </Button.Resources> Кнопка для ручного обновления данных
+            </Button>
+            -->
         </Grid>
 
         <ScrollViewer VerticalScrollBarVisibility="Auto"  Margin="64,290,64,64" Grid.Column="1" Grid.Row="1">
@@ -284,9 +294,9 @@
                         <RowDefinition Height="Auto"/>
                     </Grid.RowDefinitions>
                     <Border
-                Grid.Column="0" Grid.Row="0"
-                 VerticalAlignment="Stretch"
-                 Background="White" Grid.ColumnSpan="2" d:IsLocked="True">
+                        Grid.Column="0" Grid.Row="0"
+                        VerticalAlignment="Stretch"
+                        Background="White" Grid.ColumnSpan="2" d:IsLocked="True">
                         <Border.Resources>
                             <Style TargetType="{x:Type Border}">
                                 <Setter Property="CornerRadius" Value="10"/>
@@ -295,29 +305,133 @@
                         </Border.Resources>
                     </Border>
 
-                    <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Left" Margin="20" Grid.RowSpan="2">
-                        <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="20"  d:IsLocked="True">
-                    <Run Language="ru-ru" Text="Температура"/>
-                        </TextBlock>
-                        <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="15"  d:IsLocked="True" Margin="0,10,0,0">
-                    <Run Language="ru-ru" Text="Температура при посещении:" />
-                    <Run Language="ru-ru" Text="{Binding _pet.Name}" />
-                        </TextBlock>
-                        <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="15"  d:IsLocked="True">
-                    <Run Language="ru-ru" Text="График температуры пациента:" />
-                    <Run Language="ru-ru" Text="{Binding _pet.Sex}" />
-                        </TextBlock>
+                    <StackPanel Orientation="Vertical" Grid.Column="0" Grid.Row="0" VerticalAlignment="Top" HorizontalAlignment="Stretch" Margin="20" Grid.RowSpan="2">
+                        <StackPanel>
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="20"  d:IsLocked="True">
+                                <Run Language="ru-ru" Text="Температура"/>
+                            </TextBlock>
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="15"  d:IsLocked="True" Margin="0,10,0,0">
+                                <Run Language="ru-ru" Text="Температура при посещении:" />
+                                <Run Language="ru-ru" Text="{Binding ElementName=diagnostic, Path=Data.VisitTemperature, Mode=OneWay}" />
+                            </TextBlock>
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="15"  d:IsLocked="True">
+                                <Run Language="ru-ru" Text="График температуры пациента:" />
+                            </TextBlock>
+
+                            <Grid Width="600" Height="260" Margin="50,30,0,50" HorizontalAlignment="Left">
+                                <Border
+                                Grid.Column="0" Grid.Row="0"
+                                VerticalAlignment="Stretch"
+                                Grid.ColumnSpan="2" d:IsLocked="True">
+                                    <Border.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="10"/>
+                                        </Style>
+                                    </Border.Resources>
+                                    <Border.Background>
+                                        <SolidColorBrush Color="LightSeaGreen" Opacity="0.6"></SolidColorBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <lvc:CartesianChart Name="Temperature" Width="400" Height="230" VerticalAlignment="Center" Margin="-20,0,0,0" AxisX="{Binding XAxesTemperature}" Zoom="X">
+                                    <lvc:CartesianChart.Series>
+                                        <lvc:LineSeries Values="{Binding TemperatureValues}" LineSmoothness="0" Fill="Transparent" ScalesXAt="0" Stroke="#00865E" PointGeometry="{x:Null}"></lvc:LineSeries>
+                                    </lvc:CartesianChart.Series>
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis MinValue="26" MaxValue="40" Position="RightTop" Foreground="Black">
+                                            <lvc:Axis.Separator>
+                                                <lvc:Separator Step="2" StrokeThickness="0"/>
+                                            </lvc:Axis.Separator>
+                                        </lvc:Axis>
+                                    </lvc:CartesianChart.AxisY>
+                                </lvc:CartesianChart>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="20"  d:IsLocked="True">
+                                <Run Language="ru-ru" Text="Частота дыхания"/>
+                            </TextBlock>
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="15"  d:IsLocked="True" Margin="0,10,0,0">
+                                <Run Language="ru-ru" Text="Частота дыхания при посещении:" />
+                                <Run Language="ru-ru" Text="{Binding ElementName=diagnostic, Path=Data.VisitRespiratoryRate, Mode=OneWay}" />
+                            </TextBlock>
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="15"  d:IsLocked="True">
+                                <Run Language="ru-ru" Text="График частоты дыхания пациента:" />
+                            </TextBlock>
+
+                            <Grid Width="600" Height="260" Margin="50,30,0,50" HorizontalAlignment="Left">
+                                <Border
+                                    Grid.Column="0" Grid.Row="0"
+                                    VerticalAlignment="Stretch"
+                                    Grid.ColumnSpan="2" d:IsLocked="True">
+                                    <Border.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="10"/>
+                                        </Style>
+                                    </Border.Resources>
+                                    <Border.Background>
+                                        <SolidColorBrush Color="LightSeaGreen" Opacity="0.6"></SolidColorBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <lvc:CartesianChart Name="Respiratory" Width="400" Height="230" VerticalAlignment="Center" Margin="-20,0,0,0" AxisX="{Binding XAxesRespiratory}" Zoom="X">
+                                    <lvc:CartesianChart.Series>
+                                        <lvc:LineSeries Values="{Binding RespiratoryValues}" LineSmoothness="0" Fill="Transparent" ScalesXAt="0" Stroke="#00865E" PointGeometry="{x:Null}"></lvc:LineSeries>
+                                    </lvc:CartesianChart.Series>
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis MinValue="10" MaxValue="50" Position="RightTop" Foreground="Black">
+                                            <lvc:Axis.Separator>
+                                                <lvc:Separator Step="4" StrokeThickness="0"/>
+                                            </lvc:Axis.Separator>
+                                        </lvc:Axis>
+                                    </lvc:CartesianChart.AxisY>
+                                </lvc:CartesianChart>
+                            </Grid>
+                        </StackPanel>
+
+                        <StackPanel Margin="0,20,0,0">
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="20"  d:IsLocked="True">
+                                <Run Language="ru-ru" Text="Частота сердечных сокращений"/>
+                            </TextBlock>
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="15"  d:IsLocked="True" Margin="0,10,0,0">
+                                <Run Language="ru-ru" Text="Частота сердечных сокращений при посещении:" />
+                                <Run Language="ru-ru" Text="{Binding ElementName=diagnostic, Path=Data.VisitHeartRate, Mode=OneWay}" />
+                            </TextBlock>
+                            <TextBlock IsHitTestVisible="False" Foreground="Black" FontFamily="./Resources/montserrat-regular.ttf" FontSize="15"  d:IsLocked="True">
+                                <Run Language="ru-ru" Text="График частоты сердечных сокращений пациента:" />
+                            </TextBlock>
+
+                            <Grid Width="600" Height="260" Margin="50,30,0,50" HorizontalAlignment="Left">
+                                <Border
+                                    Grid.Column="0" Grid.Row="0"
+                                    VerticalAlignment="Stretch"
+                                    Grid.ColumnSpan="2" d:IsLocked="True">
+                                    <Border.Resources>
+                                        <Style TargetType="{x:Type Border}">
+                                            <Setter Property="CornerRadius" Value="10"/>
+                                        </Style>
+                                    </Border.Resources>
+                                    <Border.Background>
+                                        <SolidColorBrush Color="LightSeaGreen" Opacity="0.6"></SolidColorBrush>
+                                    </Border.Background>
+                                </Border>
+
+                                <lvc:CartesianChart Name="Heart" Width="400" Height="230" VerticalAlignment="Center" Margin="-20,0,0,0" AxisX="{Binding XAxesHeart}" Zoom="X">
+                                    <lvc:CartesianChart.Series>
+                                        <lvc:LineSeries Values="{Binding HeartValues}" LineSmoothness="0" Fill="Transparent" ScalesXAt="0" Stroke="#00865E" PointGeometry="{x:Null}"></lvc:LineSeries>
+                                    </lvc:CartesianChart.Series>
+                                    <lvc:CartesianChart.AxisY>
+                                        <lvc:Axis MinValue="70" MaxValue="180" Position="RightTop" Foreground="Black">
+                                            <lvc:Axis.Separator>
+                                                <lvc:Separator Step="10" StrokeThickness="0"/>
+                                            </lvc:Axis.Separator>
+                                        </lvc:Axis>
+                                    </lvc:CartesianChart.AxisY>
+                                </lvc:CartesianChart>
+                            </Grid>
+                        </StackPanel>
                     </StackPanel>
-
-
-
-                    <Button Grid.Column="1" Height="32" Width="150" Content="Обновить" Background="LightSeaGreen" FontSize="15" FontFamily="./Resources/montserrat-regular.ttf" BorderBrush="LightSeaGreen" HorizontalAlignment="Right" VerticalAlignment="Bottom" Foreground="White" Margin="0,0,10,10" Click="Button_Click_2" d:IsLocked="True" >
-                        <Button.Resources>
-                            <Style TargetType="{x:Type Border}">
-                                <Setter Property="CornerRadius" Value="10"/>
-                            </Style>
-                        </Button.Resources>
-                    </Button>
                 </Grid>
 
                 <ItemsControl.ItemContainerStyle>
